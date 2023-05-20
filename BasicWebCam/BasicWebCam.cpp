@@ -9,17 +9,11 @@ BasicWebCam::BasicWebCam(QWidget *parent) : QMainWindow(parent), ui(new Ui::Basi
     mCameraViewfinder = new QCameraViewfinder(this);
     mLayout           = new QVBoxLayout;
 
-    imageCapture = new QCameraImageCapture(mCamera);
-    timer        = new QTimer(this);
-
     mCamera->setViewfinder(mCameraViewfinder);
     mLayout->addWidget(mCameraViewfinder);
     mLayout->setMargin(0);
 
     ui->scrollArea->setLayout(mLayout);
-
-    //connect(timer, SIGNAL(timeout()), this , SLOT(videoFrameCapture()));
-    //connect(imageCapture, SIGNAL(imageCaptured(int, QImage)), this, SLOT(displayImage(int, QImage)));
 
 } //end of constructor
 
@@ -27,13 +21,25 @@ BasicWebCam::~BasicWebCam()
 {
     delete ui;
 
+    if(mCamera != nullptr)
+    {
+        delete mCamera;
+        mCamera = nullptr;
+    }
+
+    if(mCameraViewfinder != nullptr)
+    {
+        delete mCameraViewfinder;
+        mCameraViewfinder = nullptr;
+    }
+
+    if(mLayout != nullptr)
+    {
+        delete mLayout;
+        mLayout = nullptr;
+    }
+
 } //end of destructor
-
-void BasicWebCam::videoFrameCapture()
-{
-    imageCapture->capture();
-
-} //end of function videoFrameCapture
 
 void BasicWebCam::displayImage(int id, QImage image)
 {
@@ -46,9 +52,6 @@ void BasicWebCam::displayImage(int id, QImage image)
     unsigned char rValue = 0;
     unsigned char gValue = 0;
     unsigned char bValue = 0;
-
-    //ui.lblShowImage2->clear();
-    //ui.lblShowImage2->setPixmap(QPixmap::fromImage(image));
 
     width       = image.width();
     height      = image.height();
@@ -64,7 +67,6 @@ void BasicWebCam::displayImage(int id, QImage image)
             gValue = qGreen(rgbObject);
             bValue = qBlue(rgbObject);
 
-
             rValue = 255 - rValue;
             gValue = 255 - gValue;
             bValue = 255 - bValue;
@@ -73,16 +75,13 @@ void BasicWebCam::displayImage(int id, QImage image)
         }
     }
 
-    //ui.lblShowImage->clear();
-    //ui.lblShowImage->setPixmap(QPixmap::fromImage(outputImage));
-
 } //end of function displayImage
 
 void BasicWebCam::on_btnCamStart_clicked()
 {
     mCamera->start();
 
-    timer->start(33);
+    //QMessageBox::information(this, "Live View", "Start");
 
 } //end of function on_btnCamStart_clicked
 

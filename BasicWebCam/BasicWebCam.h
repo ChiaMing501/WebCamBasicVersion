@@ -6,7 +6,7 @@
 #include <QCamera>
 #include <QCameraViewfinder>
 #include <QVBoxLayout>
-
+#include <QMessageBox>
 #include <QCameraImageCapture>
 #include <QTimer>
 
@@ -27,7 +27,6 @@ class BasicWebCam : public QMainWindow
         void on_btnCamStop_clicked();
 
         void displayImage(int id, QImage image);
-        void videoFrameCapture();
 
 private:
         Ui::BasicWebCam *ui;
@@ -35,9 +34,6 @@ private:
         QCamera           *mCamera;
         QCameraViewfinder *mCameraViewfinder;
         QVBoxLayout       *mLayout;
-
-        QCameraImageCapture *imageCapture;
-        QTimer              *timer;
 
 }; //end of class BasicWebCam
 
